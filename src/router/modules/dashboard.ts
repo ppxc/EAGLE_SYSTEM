@@ -19,6 +19,33 @@ export const dashboardRoutes: AppRouteRecord = {
         keepAlive: false,
         fixedTab: true
       }
+    },
+    {
+      path: 'personnel',
+      name: 'Personnel',
+      component: '/dashboard/console',
+      meta: {
+        title: 'menus.dashboard.personnel',
+        keepAlive: false
+      }
+    },
+    {
+      path: 'cases',
+      name: 'Cases',
+      component: '/dashboard/console',
+      meta: {
+        title: 'menus.dashboard.cases',
+        keepAlive: false
+      }
+    },
+    {
+      path: 'category',
+      name: 'Category',
+      component: '/dashboard/console',
+      meta: {
+        title: 'menus.dashboard.category',
+        keepAlive: false
+      }
     }
   ]
 }

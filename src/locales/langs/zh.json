@@ -244,29 +244,31 @@
     },
     "dashboard": {
       "title": "整体情况",
-      "console": "运营情况"
+      "console": "运营情况",
+      "personnel": "人员数据",
+      "cases": "案件分部",
+      "category": "分类管理"
     },
-    "result": {
-      "title": "成本管控",
-      "success": "成功页",
-      "fail": "失败页"
+    "management": {
+      "title": "管理驾驶舱"
     },
-    "exception": {
-      "title": "劳效监控",
-      "forbidden": "403",
-      "notFound": "404",
-      "serverError": "500"
+    "cost": {
+      "title": "成本监控"
     },
-    "system": {
-      "title": "管理驾驶舱",
-      "user": "车险驾驶舱",
-      "role": "非车驾驶舱",
-      "userCenter": "个人中心",
-      "menu": "大数据风控中心"
+    "efficiency": {
+      "title": "劳效监控"
     },
-    "test": {
-      "title": "咨询投诉",
-      "user": "测试1"
+    "complaint": {
+      "title": "咨询投诉"
+    },
+    "resource": {
+      "title": "资源监控"
+    },
+    "profile": {
+      "title": "多维度画像"
+    },
+    "list": {
+      "title": "清单管理"
     }
   },
   "table": {
