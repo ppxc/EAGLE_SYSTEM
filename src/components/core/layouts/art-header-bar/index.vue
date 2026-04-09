@@ -44,9 +44,9 @@
         />
 
         <!-- 快速入口 -->
-        <ArtFastEnter v-if="shouldShowFastEnter && width >= headerBarFastEnterMinWidth">
+        <!-- <ArtFastEnter v-if="shouldShowFastEnter && width >= headerBarFastEnterMinWidth">
           <ArtIconButton icon="ri:function-line" class="ml-3" />
-        </ArtFastEnter>
+        </ArtFastEnter> -->
 
         <!-- 面包屑 -->
         <ArtBreadcrumb
@@ -110,6 +110,7 @@
         </ElDropdown>
 
         <!-- 通知按钮 -->
+        <!--
         <ArtIconButton
           v-if="shouldShowNotification"
           icon="ri:notification-2-line"
@@ -118,9 +119,10 @@
         >
           <div class="absolute top-2 right-2 size-1.5 !bg-danger rounded-full"></div>
         </ArtIconButton>
+        -->
 
         <!-- 聊天按钮 -->
-<!--        <ArtIconButton
+        <!--        <ArtIconButton
           v-if="shouldShowChat"
           icon="ri:message-3-line"
           class="chat-button relative"
@@ -128,6 +130,13 @@
         >
           <div class="breathing-dot absolute top-2 right-2 size-1.5 !bg-success rounded-full"></div>
         </ArtIconButton>-->
+
+        <!-- 主题切换按钮 -->
+        <ArtIconButton
+          v-if="shouldShowThemeToggle"
+          @click="themeAnimation"
+          :icon="isDark ? 'ri:sun-fill' : 'ri:moon-line'"
+        />
 
         <!-- 设置按钮 -->
         <div v-if="shouldShowSettings">
@@ -148,15 +157,10 @@
           </ElPopover>
         </div>
 
-        <!-- 主题切换按钮 -->
-        <ArtIconButton
-          v-if="shouldShowThemeToggle"
-          @click="themeAnimation"
-          :icon="isDark ? 'ri:sun-fill' : 'ri:moon-line'"
-        />
-
         <!-- 用户头像、菜单 -->
+        <!--
         <ArtUserMenu />
+        -->
       </div>
     </div>
 
