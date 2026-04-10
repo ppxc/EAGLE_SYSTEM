@@ -7,14 +7,15 @@ import {complaintRoutes} from './complaint'
 import {resourceRoutes} from './resource'
 import {profileRoutes} from './profile'
 import {listRoutes} from './list'
-import { testRoutes } from './test'
 import { indicatorRoutes } from './indicator'
+import { dataTableRoutes } from './datatable'
 
+// import { testRoutes } from './test'
 /**
  * 导出所有模块化路由
  */
 export const routeModules: AppRouteRecord[] = [
-    indicatorRoutes,
+    
     dashboardRoutes,
     managementRoutes,
     costRoutes,
@@ -23,5 +24,7 @@ export const routeModules: AppRouteRecord[] = [
     resourceRoutes,
     profileRoutes,
     listRoutes,
+    indicatorRoutes,
+    dataTableRoutes,
     // testRoutes
 ]

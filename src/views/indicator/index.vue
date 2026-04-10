@@ -1,7 +1,7 @@
 <template>
   <div class="Indicator-page">
     <indicator />
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -10,11 +10,14 @@
   defineOptions({ name: 'Indicator' })
 </script>
 
-<style scoped>
+<!-- <style scoped>
   .Indicator-page {
     width: 100%;
     height: 75vh; /* 关键：让父级占满屏幕高度 */
     padding: 10px;
     box-sizing: border-box;
   }
-</style>
+</style>  -->
+
+
+

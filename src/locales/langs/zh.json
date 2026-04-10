@@ -277,6 +277,10 @@
     "indicator": {
       "title": "关键指标",
       "subtitle": "指标图表"
+    },
+    "datatable": {
+      "title": "数据表格",
+      "subtitle": "数据图表"
     } 
   },
   "table": {

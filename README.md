@@ -1,4 +1,4 @@
-#简介
+<!-- #简介
 TODO: 简要介绍你的项目。通过此节说明此项目的目标或动机。
 
 #入门
@@ -17,4 +17,7 @@ TODO: 说明其他用户和开发人员可如何帮助改善代码。
 如需深入了解如何创建优秀的自述文件，请参阅以下[指南](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops)。还可从以下自述文件中寻求灵感:
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+- [Chakra Core](https://github.com/Microsoft/ChakraCore) -->
+于 src/views 下新建页面
+路由位于src/router/modules/index.ts
+侧面标题位于src/locale/zh-CN.json 于侧标题单独路由文件中使用menus.xxxx.title调用

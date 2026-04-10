@@ -3,7 +3,7 @@
     <h1 class="page-title">人员活动指标</h1>
     
     <!-- 使用 Element Plus 栅格系统创建响应式布局 -->
-    <ElRow :gutter="40">
+    <ElRow :gutter="20">
       
       <!-- 当日报案数量卡片 -->
       <ElCol :xs="24" :sm="12" :md="8" class="mb-5" >
@@ -45,7 +45,7 @@
     <!-- 附加指标行 -->
     <ElRow :gutter="20">
       <!-- 查勘量统计 -->
-      <ElCol :xs="24" :sm="12" :md="12" class="mb-5">
+      <ElCol :xs="24" :sm="12" :md="8" class="mb-5">
         <ArtLineChartCard
           :value="inspectionVolume.total"
           label="查勘量"
@@ -57,7 +57,7 @@
       </ElCol>
       
       <!-- 定损量统计 -->
-      <ElCol :xs="24" :sm="12" :md="12" class="mb-5">
+      <ElCol :xs="24" :sm="12" :md="8" class="mb-5">
         <ArtLineChartCard
           :value="damageAssessment.total"
           label="定损量"
@@ -68,13 +68,26 @@
           color="#ec4899"
         />
       </ElCol>
-      
+      <ElCol :xs="24" :sm="12" :md="8" class="mb-5">
+        <ArtDonutChartCard
+          :value="EndedPercentage.currentValue"
+          title="结案率"
+          :percentage="calculatePercentage(EndedPercentage.currentValue, EndedPercentage.previousValue)"
+          percentageLabel="较去年"
+          :data="EndedPercentage.data"
+          :height="12"
+          currentValue="已决"
+          previousValue="未决"
+          :radius="['70%', '90%']"
+        />
+      </ElCol>
     </ElRow>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+// import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import ArtLineChartCard from '@/components/core/cards/art-line-chart-card/index.vue'
 import ArtBarChartCard from '@/components/core/cards/art-bar-chart-card/index.vue'
 import ArtDonutChartCard from '@/components/core/cards/art-donut-chart-card/index.vue'
@@ -114,6 +127,87 @@ const damageAssessment = reactive({
   trendData: [780, 795, 810, 820, 850, 870, 820]
 })
 
+const EndedPercentage = reactive({
+  currentValue: 95,
+  previousValue: 93,
+  data: [38888, 2666]//已决数，未决数
+})
+// const currentReportNum = reactive({
+//   today: ref(0),
+//   yesterday: ref(0),
+//   trendData: ref<number[]>([])
+// })
+// const currentFiledNum = reactive({
+//   count: ref(0),
+//   yesterday: ref(0),
+//   trendData: ref<number[]>([])
+// })
+// const currentEndedNum = reactive({
+//   count: ref(0),
+//   yesterday: ref(0),
+//   trendData: ref<number[]>([])
+// })
+// const inspectionVolume = reactive({
+//   total: ref(0),
+//   lastMonth: ref(0),
+//   trendData: ref<number[]>([])
+// })
+// const damageAssessment = reactive({
+//   total: ref(0),
+//   lastMonth: ref(0),
+//   trendData: ref<number[]>([])
+// })
+// const EndedPercentage = reactive({
+//   currentValue: ref(0),
+//   previousValue: ref(0),
+//   data: ref<number[]>([]) //已决数，未决数
+// })
+// const fetchIndicatorData = async () => {
+//   try {
+//     const response = await fetch('http://localhost:8080/api/indicators/data')
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`)
+//     }
+//     const data = await response.json()
+    
+//     // 更新当日报案数据
+//     currentReportNum.today = data.currentReportNum.today
+//     currentReportNum.yesterday = data.currentReportNum.yesterday
+//     currentReportNum.trendData = data.currentReportNum.trendData
+    
+//     // 更新当日立案数据
+//     currentFiledNum.count = data.currentFiledNum.count
+//     currentFiledNum.yesterday = data.currentFiledNum.yesterday
+//     currentFiledNum.trendData = data.currentFiledNum.trendData
+    
+//     // 更新当日结案数据
+//     currentEndedNum.count = data.currentEndedNum.count
+//     currentEndedNum.yesterday = data.currentEndedNum.yesterday
+//     currentEndedNum.trendData = data.currentEndedNum.trendData
+    
+//     // 更新查勘量数据
+//     inspectionVolume.total = data.inspectionVolume.total
+//     inspectionVolume.lastMonth = data.inspectionVolume.lastMonth
+//     inspectionVolume.trendData = data.inspectionVolume.trendData
+    
+//     // 更新定损量数据
+//     damageAssessment.total = data.damageAssessment.total
+//     damageAssessment.lastMonth = data.damageAssessment.lastMonth
+//     damageAssessment.trendData = data.damageAssessment.trendData
+    
+//     // 更新结案率数据
+//     EndedPercentage.currentValue = data.EndedPercentage.currentValue
+//     EndedPercentage.previousValue = data.EndedPercentage.previousValue
+//     EndedPercentage.data = data.EndedPercentage.data
+    
+//   } catch (error) {
+//     console.error('获取指标数据失败:', error)
+//   }
+// }
+// // 组件挂载时获取数据
+// onMounted(() => {
+//   fetchIndicatorData()
+// })
 // 计算百分比变化的辅助函数
 const calculatePercentage = (current: number, previous: number): number => {
   if (previous === 0) return current > 0 ? 100 : 0
