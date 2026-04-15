@@ -10,6 +10,7 @@ export const efficiencyRoutes: AppRouteRecord = {
     roles: ['R_SUPER', 'R_ADMIN']
   },
   children: [
+    // 运营效率
     {
       path: 'personnel',
       name: 'Personnel',
@@ -18,6 +19,49 @@ export const efficiencyRoutes: AppRouteRecord = {
         title: 'menus.efficiency.personnel',
         keepAlive: false
       }
+    },
+    // 日常通报
+    {
+      path: 'daily',
+      name: 'DailyReport',
+      meta: {
+        title: 'menus.efficiency.daily.title',
+        keepAlive: false
+      },
+      children: [
+        // 周期通报
+        {
+          path: 'periodic',
+          name: 'PeriodicReport',
+          meta: {
+            title: 'menus.efficiency.daily.periodic',
+            keepAlive: false
+          },
+          children: [
+            // 周期通报详情
+            {
+              path: 'sichuan',
+              name: 'SichuanPeriodic',
+              component: '/efficiency/daily/periodic/table_cs',
+              meta: {
+                title: '四川省周期通报',
+                keepAlive: false
+              }
+            },
+            // ====================== 你的 gzl_ss 工作量通报 ======================
+            {
+              path: 'gzl',
+              name: 'SichuanGzl',
+              component: '/efficiency/daily/periodic/table_gzl',
+              meta: {
+                title: '四川省工作量通报',
+                keepAlive: false
+              }
+            }
+            // ====================================================================
+          ]
+        }
+      ]
     }
   ]
 }

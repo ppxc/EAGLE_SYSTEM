@@ -254,9 +254,21 @@
       "title": "成本监控"
     },
     "efficiency": {
-      "title": "劳效监控",
-      "personnel": "人员数据",
-      "cases": "案件情况"
+      "title": "数据报表",
+      "personnel": "运营效率",
+      "cases": "案件情况",
+      "daily": {
+        "title": "日常通报",
+        "periodic": "周期通报"
+      }
+    },
+    
+      "result": {
+        "title": "数据报表",
+        "success": "成功报表",
+        "fail": "失败报表",
+        "list": "清单管理"
+      
     },
     "complaint": {
       "title": "咨询投诉"
@@ -266,9 +278,6 @@
     },
     "profile": {
       "title": "多维度画像"
-    },
-    "list": {
-      "title": "清单管理"
     }
   },
   "table": {

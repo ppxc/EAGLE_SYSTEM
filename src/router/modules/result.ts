@@ -28,6 +28,16 @@ export const resultRoutes: AppRouteRecord = {
         icon: 'ri:close-circle-line',
         keepAlive: true
       }
+    },
+    {
+      path: 'list',
+      name: 'resultList',
+      component: '/result/list',
+      meta: {
+        title: 'menus.result.list',
+        icon: 'ri:list-check',
+        keepAlive: true
+      }
     }
   ]
 }
