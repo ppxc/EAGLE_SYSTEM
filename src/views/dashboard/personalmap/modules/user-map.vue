@@ -152,7 +152,7 @@
 
 <script setup lang="ts">
   import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
-
+  
   // 全局声明腾讯地图SDK，避免TS类型报错
   declare global {
     interface Window {
@@ -202,7 +202,7 @@
     if (!searchKeyword.value) return userList.value
     const kw = searchKeyword.value.toLowerCase()
     return userList.value.filter((u) => {
-      const name = (u || '').toLowerCase()
+      const name = (u.username || '').toLowerCase()
       const code = (u.usercode || '').toLowerCase()
       return name.includes(kw) || code.includes(kw)
     })

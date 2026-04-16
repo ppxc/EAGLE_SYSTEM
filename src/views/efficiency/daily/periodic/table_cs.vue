@@ -139,7 +139,7 @@ const tempColShow = ref(JSON.parse(JSON.stringify(colShow.value)))
 const checkAll = ref(true)
 
 // 全选
-const handleCheckAll = (val) => {
+const handleCheckAll = (val: boolean) => {
   Object.keys(tempColShow.value).forEach(k => {
     tempColShow.value[k] = val
   })
