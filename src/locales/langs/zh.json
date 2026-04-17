@@ -230,6 +230,10 @@
     "gohome": "返回首页"
   },
   "menus": {
+    "test": {
+      "title": "测试页",
+      "user": "用户管理"
+    },
     "login": {
       "title": "登录"
     },
@@ -278,7 +282,18 @@
     },
     "profile": {
       "title": "多维度画像"
-    }
+    },
+    "list": {
+      "title": "清单管理"
+    },
+    "indicator": {
+      "title": "关键指标",
+      "subtitle": "指标图表"
+    },
+    "datatable": {
+      "title": "数据表格",
+      "subtitle": "数据图表"
+    } 
   },
   "table": {
     "form": {
