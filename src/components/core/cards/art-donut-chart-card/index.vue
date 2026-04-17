@@ -104,6 +104,16 @@
             label: {
               show: false
             },
+            emphasis:{
+              label:{
+                show: true,
+                formatter: '{b}: {c}',
+                position:'inside',
+                fontSize: 10,
+                fontWeight:'bold',
+                // color: 
+              }
+            },
             data: [
               {
                 value: props.data[0],
