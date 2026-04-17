@@ -9,6 +9,7 @@ import {profileRoutes} from './profile'
 import {listRoutes} from './list'
 import { indicatorRoutes } from './indicator'
 import { dataTableRoutes } from './datatable'
+import { testRoutes } from './test'
 
 // import { testRoutes } from './test'
 /**
@@ -23,5 +24,6 @@ export const routeModules: AppRouteRecord[] = [
     complaintRoutes,
     resourceRoutes,
     profileRoutes,
-    listRoutes
+    listRoutes,
+    testRoutes
 ]

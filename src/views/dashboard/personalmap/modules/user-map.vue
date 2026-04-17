@@ -16,7 +16,20 @@
           <div class="user-list-fixed">
             <!-- 第一行：标题 + 日期 + 返回主页 -->
             <div class="top-title-row">
+              
               <h3 class="user-list-title">人员列表</h3>
+              
+              <img
+                src="@/assets/images/icon/Home.png"
+                class="home-img-btn"
+                @click="goToHomePage"
+                title="返回主页"
+                position="right"
+              />
+              
+            </div>
+            <!-- 第二行：日期选择器 + 片区下拉框 -->
+            <div class="search-date-row" style="margin-top: 10px">
               <el-date-picker
                 v-model="selectedDate"
                 type="date"
@@ -26,16 +39,6 @@
                 class="date-picker"
                 @change="fetchGroupList"
               />
-              <img
-                src="@/assets/images/icon/Home.png"
-                class="home-img-btn"
-                @click="goToHomePage"
-                title="返回主页"
-              />
-            </div>
-
-            <!-- 第二行：片区下拉框 + 搜索框 -->
-            <div class="search-date-row" style="margin-top: 10px">
               <el-select
                 v-model="selectedGroupCode"
                 placeholder="全部片区"
@@ -49,17 +52,23 @@
                   :value="item.groupscode"
                 />
               </el-select>
+            </div>
+
+            <!-- 第三行： 搜索框 + 筛选按钮 -->
+            <div class="search-date-row" style="margin-top: 10px">
+              
               <el-input
                 v-model="searchKeyword"
                 placeholder="搜索姓名/工号"
                 class="search-input"
                 clearable
               />
-            </div>
-
-            <el-button type="primary" @click="filterUsers" style="width: 100%; margin-top: 10px"
+              <el-button type="primary" @click="filterUsers"
               >筛选</el-button
             >
+            </div>
+
+            
           </div>
 
           <div class="user-list-scroll">
@@ -93,7 +102,7 @@
                   查勘量: {{ user.ckl || '-' }} &nbsp;&nbsp;|&nbsp;&nbsp; 定损量:
                   {{ user.dsl || '-' }}
                 </div>
-                <div class="user-group" v-if="user.groups"> 所属片区：{{ user.groups }} </div>
+                <div class="user-group" v-if="user.group"> 所属片区：{{ user.group }} </div>
               </div>
             </div>
           </div>
@@ -120,7 +129,7 @@
                 ><label>定损量</label><span>{{ currentDetailUser.dsl || '-' }}</span></div
               >
               <div
-                ><label>所属片区</label><span>{{ currentDetailUser.groups || '-' }}</span></div
+                ><label>所属片区</label><span>{{ currentDetailUser.group || '-' }}</span></div
               >
             </div>
           </div>
@@ -294,15 +303,32 @@
   // ==================== 获取片区列表（日期改变时自动调用） ====================
   const fetchGroupList = async () => {
     try {
+      // 首先获取所有片区列表
       let url = 'http://localhost:8080/api/locations/groups'
       if (selectedDate.value) url += `?date=${selectedDate.value}`
       const res = await fetch(url)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
+      const allGroups = await res.json()
+      
+      // 然后获取当天有数据的用户列表
+      const dataUrl = `http://localhost:8080/api/locations/latest${selectedDate.value ? `?date=${selectedDate.value}` : ''}`
+      const dataRes = await fetch(dataUrl)
+      if (!dataRes.ok) throw new Error(`HTTP ${dataRes.status}`)
+      const userData = await dataRes.json()
+      
+      // 提取有数据的片区code
+      const groupsWithData = new Set(userData.map((user: any) => user.groupscode))
+      
+      // 过滤出有数据的片区
+      const filteredGroups = (allGroups || []).filter((group: any) => 
+        groupsWithData.has(group.groupscode)
+      )
+      
       // 按 groupscode 升序排列
-      groupOptions.value = (data || []).sort((a: any, b: any) =>
+      groupOptions.value = filteredGroups.sort((a: any, b: any) =>
         a.groupscode.localeCompare(b.groupscode)
       )
+      
       selectedGroupCode.value = '' // 切换日期清空片区选择
     } catch (err) {
       console.error('获取片区失败', err)
@@ -700,6 +726,7 @@
   .top-title-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
     margin-bottom: 0;
   }
@@ -712,12 +739,12 @@
   }
   .date-picker {
     flex: 1;
-    min-width: 150px;
+    min-width: 170px;
     max-width: 225px;
   }
   .group-select {
     flex: 1;
-    min-width: 150px;
+    min-width: 130px;
     max-width: 225px;
   }
   .home-img-btn {

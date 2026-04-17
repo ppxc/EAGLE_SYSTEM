@@ -33,17 +33,24 @@
         v-model:columns="columnChecks"
         :loading="loading"
         @refresh="handleRefresh"
-        layout="refresh,size,fullscreen,columns,settings"
+        layout="refresh,size,fullscreen,columns,settings,search"
         fullClass="art-table-card"
       >
         <template #left>
           <ElSpace wrap>
-            <ElButton type="primary" @click="handleExport" v-ripple>
+            <ElDropdown split-button type="primary" @click="handleExportAll" v-ripple>
               <ElIcon>
                 <Download />
               </ElIcon>
-              导出Excel
-            </ElButton>
+              导出全表
+              <template #dropdown>
+                <ElDropdownMenu>
+                  <!-- <ElDropdownItem @click="handleExportAll">导出全部</ElDropdownItem> -->
+                  <ElDropdownItem @click="handleExportCurrent">仅导出当前页</ElDropdownItem>
+                  
+                </ElDropdownMenu>
+              </template>
+            </ElDropdown>
           </ElSpace>
         </template>
       </ArtTableHeader>
@@ -113,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted, watch } from 'vue'
   import {
     Download,
     Refresh
@@ -123,6 +130,7 @@
   import { useTableStore } from '@/store/modules/table'
   import { ColumnOption } from '@/types'
   import * as XLSX from 'xlsx'
+  import axios from 'axios'
 
   defineOptions({ name: 'PeriodicReportTable' })
 
@@ -149,7 +157,7 @@
 
   // 表单搜索初始值
   const searchFormState = ref({
-    queryDate: new Date().toISOString().split('T')[0],
+    queryDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
     cityCompany: ''
   })
 
@@ -196,7 +204,9 @@
     pagination,
     refreshData,
     handleSizeChange,
-    handleCurrentChange
+    handleCurrentChange,
+    columns,
+    columnChecks
   } = useTable<PeriodicReportData>({
     core: {
       apiFn: async ({ current, size, ...params }) => {
@@ -208,23 +218,25 @@
           cityCompany: params.cityCompany || ''
         }
 
-        // 发送请求到后端
-        const response = await fetch('/api/aaa/list', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(queryParams)
+        // 发送请求到后端 - 与table_cs.vue保持一致
+        const response = await axios.get('http://localhost:8080/api/aaa/list', {
+          params: { queryTime: queryParams.queryDate }
         })
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+        // 后端返回的是数组形式的数据，需要包装成分页格式
+        const allData = response.data
+        const start = (current - 1) * size
+        const end = start + size
+        const paginatedData = allData.slice(start, end)
+        
+        return {
+          records: paginatedData,
+          total: allData.length,
+          current,
+          size
         }
-
-        const result = await response.json()
-        console.log(result)
-        return result
       },
+      
       apiParams: {
         current: 1,
         size: 20,
@@ -232,66 +244,78 @@
       },
       immediate: true,
       columnsFactory: () => [
+        // {
+        //   type: 'selection',
+        //   width: 50,
+        //   align: 'center'
+        // },
         {
-          type: 'selection',
-          width: 50,
-          align: 'center'
-        },
-        {
-          prop: 'index',
+          prop: 'id',
           label: '序号',
-          width: 80,
+          minWidth: 50,
           align: 'center',
-          fixed: 'left'
+          fixed: 'left',  //fixed 固定列，无法拖动
+
         },
         {
           prop: 'cityCompany',
           label: '市公司',
           minWidth: 200,
           align: 'center',
-          fixed: 'left'
+          fixed: 'left' ,//fixed 固定列，无法拖动
+          // filterMethod: (value: string, row: any) => {
+          // // 只显示城市名称包含指定值的行
+          // return row.cityCompany.includes(value);
+        // }
         },
         {
           prop: 'surveyCycle',
           label: '查勘周期(天)',
-          width: 130,
-          align: 'center'
+          minWidth: 130, 
+          align: 'center',
+          sortable: true
         },
         {
           prop: 'urgeDetermineCycle',
           label: '催定周期(天)',
-          width: 130,
-          align: 'center'
+          minWidth: 130, 
+          align: 'center',
+          sortable: true
         },
         {
           prop: 'determineCycle',
           label: '定损周期(天)',
-          width: 130,
-          align: 'center'
+          minWidth: 130, 
+          align: 'center',
+          sortable: true
         },
         {
           prop: 'determineToPay',
           label: '定损完成-支付(天)',
-          width: 160,
-          align: 'center'
+          minWidth: 150, 
+          align: 'center',
+          sortable: true
         },
         {
           prop: 'totalCloseCycle',
           label: '整体结案周期(天)',
-          width: 150,
-          align: 'center'
+          minWidth: 150, 
+          align: 'center', 
+          sortable: true
         },
         {
           prop: 'under10kCloseCycle',
           label: '万元内案件结案周期(天)',
-          width: 180,
-          align: 'center'
+          minWidth: 200, 
+          align: 'center',
+          sortable: true
         },
         {
           prop: 'over10kCloseCycle',
           label: '万元以上案件结案周期(天)',
-          width: 180,
-          align: 'center'
+          minWidth: 200, 
+          align: 'center',
+          sortable: true
         }
       ]
     },
@@ -302,9 +326,6 @@
       maxCacheSize: 100
     }
   })
-
-  // 从 useTable 获取列配置和列显示控制
-  const { columns, columnChecks } = useTableStore()
 
   // 选中的行
   const selectedRows = ref<PeriodicReportData[]>([])
@@ -345,8 +366,8 @@
     refreshData()
   }
 
-  // 导出功能
-  const handleExport = () => {
+  // 导出当前页数据
+  const handleExportCurrent = async () => {
     if (!data.value || data.value.length === 0) {
       ElNotification({
         title: '提示',
@@ -381,14 +402,75 @@
     const minutes = String(now.getMinutes()).padStart(2, '0')
     const seconds = String(now.getSeconds()).padStart(2, '0')
     
-    const fileName = `四川省周期报表_${year}${month}${day}_${hours}${minutes}${seconds}.xlsx`
+    const fileName = `四川省周期报表_当前页_${year}${month}${day}_${hours}${minutes}${seconds}.xlsx`
     XLSX.writeFile(wb, fileName)
     
     ElNotification({
       title: '成功',
-      message: '数据导出成功',
+      message: '当前页数据导出成功',
       type: 'success'
     })
+  }
+
+  // 导出全部数据
+  const handleExportAll = async () => {
+    try {
+      // 获取全部数据，需要调用API获取所有记录
+      const response = await axios.get('http://localhost:8080/api/aaa/list', {
+        params: { queryTime: searchFormState.value.queryDate }
+      })
+
+      if (!response.data || response.data.length === 0) {
+        ElNotification({
+          title: '提示',
+          message: '暂无数据可导出',
+          type: 'warning'
+        })
+        return
+      }
+
+      const allData = response.data
+      const exportData = allData.map((item, index) => ({
+        '序号': index + 1,
+        '市公司': item.cityCompany,
+        '查勘周期(天)': item.surveyCycle,
+        '催定周期(天)': item.urgeDetermineCycle,
+        '定损周期(天)': item.determineCycle,
+        '定损完成-支付(天)': item.determineToPay,
+        '整体结案周期(天)': item.totalCloseCycle,
+        '万元内案件结案周期(天)': item.under10kCloseCycle !== null ? item.under10kCloseCycle : '-',
+        '万元以上案件结案周期(天)': item.over10kCloseCycle !== null ? item.over10kCloseCycle : '-'
+      }))
+
+      const ws = XLSX.utils.json_to_sheet(exportData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, '四川省周期报表')
+      
+      // 生成当前时间戳格式的文件名 YYYYMMDD_HHMMSS
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = String(now.getMonth() + 1).padStart(2, '0')
+      const day = String(now.getDate()).padStart(2, '0')
+      const hours = String(now.getHours()).padStart(2, '0')
+      const minutes = String(now.getMinutes()).padStart(2, '0')
+      const seconds = String(now.getSeconds()).padStart(2, '0')
+      
+      const fileName = `四川省周期报表_全部_${year}${month}${day}_${hours}${minutes}${seconds}.xlsx`
+      XLSX.writeFile(wb, fileName)
+      
+      ElNotification({
+        title: '成功',
+        message: `${allData.length} 条数据导出成功`,
+        type: 'success'
+      })
+    } catch (error) {
+      console.error('导出全部数据失败:', error)
+      ElNotification({
+        title: '错误',
+        message: '导出全部数据失败，请重试',
+        type: 'error'
+      })
+    }
   }
 </script>
 
