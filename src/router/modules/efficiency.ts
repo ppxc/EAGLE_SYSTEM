@@ -39,25 +39,25 @@ export const efficiencyRoutes: AppRouteRecord = {
           },
           children: [
             // 周期通报详情
-            {
-              path: 'sichuan',
-              name: 'SichuanPeriodic',
-              component: '/efficiency/daily/periodic/table_cs',
-              meta: {
-                title: '四川省周期通报',
-                keepAlive: false
-              }
-            },
-            // ====================== 你的 gzl_ss 工作量通报 ======================
-            {
-              path: 'gzl',
-              name: 'SichuanGzl',
-              component: '/efficiency/daily/periodic/table_gzl',
-              meta: {
-                title: '四川省工作量通报',
-                keepAlive: false
-              }
-            },
+            // {
+            //   path: 'sichuan',
+            //   name: 'SichuanPeriodic',
+            //   component: '/efficiency/daily/periodic/table_cur_gzl',
+            //   meta: {
+            //     title: '四川省周期通报',
+            //     keepAlive: false
+            //   }
+            // },
+            // // ====================== 你的 gzl_ss 工作量通报 ======================
+            // {
+            //   path: 'gzl',
+            //   name: 'SichuanGzl',
+            //   component: '/efficiency/daily/periodic/table_cur_gzl',
+            //   meta: {
+            //     title: '四川省工作量通报',
+            //     keepAlive: false
+            //   }
+            // },
             // ====================================================================
             {
               path: 'cur_gzl',
