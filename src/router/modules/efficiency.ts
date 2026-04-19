@@ -38,33 +38,41 @@ export const efficiencyRoutes: AppRouteRecord = {
             keepAlive: false
           },
           children: [
-            // 周期通报详情
-            // {
-            //   path: 'sichuan',
-            //   name: 'SichuanPeriodic',
-            //   component: '/efficiency/daily/periodic/table_cur_gzl',
-            //   meta: {
-            //     title: '四川省周期通报',
-            //     keepAlive: false
-            //   }
-            // },
-            // // ====================== 你的 gzl_ss 工作量通报 ======================
-            // {
-            //   path: 'gzl',
-            //   name: 'SichuanGzl',
-            //   component: '/efficiency/daily/periodic/table_cur_gzl',
-            //   meta: {
-            //     title: '四川省工作量通报',
-            //     keepAlive: false
-            //   }
-            // },
+            // ====================== gzl_ss 工作量通报 ======================
+            {
+              path: 'gzl_bm',
+              name: 'CurGzlBm',
+              component: '/efficiency/daily/periodic/table_cur_gzl_bm',
+              meta: {
+                title: '部门当日工作量统计',
+                keepAlive: false
+              }
+            },
+            {
+              path: 'gzl_group',
+              name: 'CurGzlGroup',
+              component: '/efficiency/daily/periodic/table_cur_gzl_group',
+              meta: {
+                title: '小组当日工作量统计',
+                keepAlive: false
+              }
+            },
             // ====================================================================
             {
-              path: 'cur_gzl',
-              name: 'CurGzl',
+              path: 'cur_gzl_ry',
+              name: 'CurGzlRy',
               component: '/efficiency/daily/periodic/table_cur_gzl_ry',
               meta: {
                 title: '人员当日工作量统计',
+                keepAlive: false
+              }
+            },
+            {
+              path: 'cur_gzl_rs',
+              name: 'CurGzlRs',
+              component: '/efficiency/daily/periodic/table_cur_gzl_rs',
+              meta: {
+                title: '人伤当日工作量统计',
                 keepAlive: false
               }
             }
