@@ -6,9 +6,55 @@
 </template>
 
 <script setup lang="ts">
+  import { ref, onMounted } from 'vue';
   import UserMap from './modules/user-map.vue'
+  import { usePreload } from '@/hooks/core/usePreload'
 
   defineOptions({ name: 'Console' })
+
+
+  // 预加载table_cur_gzl_ry页面，减少打开table_cur_gzl_ry页面时的加载时间
+  const { preloadComponents, getPreloadedComponent, isLoading, isPreloaded } = usePreload();
+  
+  // 使用 sessionStorage 来追踪是否已经预加载过组件
+  const PRELOAD_KEY = 'personalmap_preloaded';
+
+  const preloadComponentsPages = async() => {
+    // 检查是否已经预加载过
+    if (sessionStorage.getItem(PRELOAD_KEY)) {
+      console.log('组件已预加载过，跳过预加载');
+      return;
+    }
+
+    setTimeout(async () => {
+      try {
+        await preloadComponents({
+          // table_cur_gzl_ry : () => import('../../efficiency/daily/periodic/table_cur_gzl_ry.vue'),
+          ArtTable : () => import('@/components/core/tables/art-table/index.vue'),
+          ArtSearchBar : () => import('@/components/core/forms/art-search-bar/index.vue'),
+          ArtTableHeader : () => import('@/components/core/tables/art-table-header/index.vue'),
+        });
+        
+        // 标记为已预加载
+        sessionStorage.setItem(PRELOAD_KEY, 'true');
+        
+        console.log('预加载完成，组件可用:', isPreloaded('ArtTable'));
+        console.log('预加载完成，组件实例:', getPreloadedComponent('ArtTable'));
+        console.log('预加载完成，组件可用:', isPreloaded('ArtSearchBar'));
+        console.log('预加载完成，组件实例:', getPreloadedComponent('ArtSearchBar'));
+        console.log('预加载完成，组件可用:', isPreloaded('ArtTableHeader'));
+        console.log('预加载完成，组件实例:', getPreloadedComponent('ArtTableHeader'));
+      } catch (error) {
+        console.warn('预加载失败:', error);
+      }
+    }, 2000); // 延迟2秒，让页面先渲染完成
+  };
+
+  onMounted(() => {
+    preloadComponentsPages();
+  });
+    
+
 </script>
 
 <style scoped>
