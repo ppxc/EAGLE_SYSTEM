@@ -270,7 +270,7 @@
           comName: tableApiParams.value.comName ?? ''
         }
 
-        const response = await axios.get('http://localhost:8080/api/cur_gzl_bm/list', {
+        const response = await axios.get(`${import.meta.env.VITE_API_PROXY_PORT_URL}api/cur_gzl_bm/list`, {
           params: queryParams
         })
 
@@ -348,7 +348,7 @@
   // ==================== 9. 页面操作方法 ====================
   const handleRefresh = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/cur_gzl_bm/list', {
+      const res = await axios.get(`${import.meta.env.VITE_API_PROXY_PORT_URL}api/cur_gzl_bm/list`, {
         params: { current: 1, size: 9999 }
       })
       if (res.data?.code === 200 && res.data.data?.length) {
@@ -417,7 +417,7 @@
 
   const handleExportAll = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/cur_gzl_bm/list', {
+      const res = await axios.get(`${import.meta.env.VITE_API_PROXY_PORT_URL}api/cur_gzl_bm/list`, {
         params: tableApiParams.value
       })
       const data = res.data?.data as DailyWorkloadBmData[]
