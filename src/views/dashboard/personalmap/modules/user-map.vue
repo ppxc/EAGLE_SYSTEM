@@ -187,7 +187,9 @@
 <script setup lang="ts">
   import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
   import { AdministrativeRegionManager } from './AdministrativeRegionmanager'
+  import { MapLoader } from '@/utils/mapLoader'
   const VITE_API_PROXY_PORT_URL = import.meta.env.VITE_API_PROXY_PORT_URL
+  const mapLoader = MapLoader.getInstance()
   // 全局声明腾讯地图SDK和自定义属性，避免TS类型报错
   declare global {
     interface Window {
@@ -200,7 +202,7 @@
   type AdministrativeRegionManagerType = InstanceType<typeof AdministrativeRegionManager>
   
     // 腾讯地图api key
-  // const ApiKey = 'KJ5BZ-2JC6Q-PGA5F-4DREW-YWBR6-TEB24'
+ 
   // ==================== 地图实例与图层对象 ====================
   let map: any = null
   let markerLayer: any = null
@@ -264,15 +266,20 @@
   // ==================== 地图初始化 ====================
   const initMap = async () => {
     try {
-      let attempts = 0
-      while (!window.TMap && attempts < 100) {
-        await new Promise((resolve) => setTimeout(resolve, 100))
-        attempts++
+      loading.value = true;
+    
+      // // 使用MapLoader加载地图API
+      // const mapLoader = MapLoader.getInstance();
+      // await mapLoader.loadMapApi();
+    
+      // // 获取TMap实例
+      // const TMap = await mapLoader.getMapInstance();
+    
+      // 初始化地图
+      const container = document.getElementById('map-container');
+      if (!container) {
+        throw new Error('地图容器不存在');
       }
-      if (!window.TMap) throw new Error('腾讯地图 GL SDK 加载失败')
-
-      const container = document.getElementById('map-container')
-      if (!container) throw new Error('地图容器未找到')
 
       map = new window.TMap.Map(container, {
         center: new window.TMap.LatLng(30.6799, 104.0571),
@@ -694,8 +701,14 @@
   }
 
   // 生命周期
-  onMounted(() => {
-    initMap()
+  onMounted(async() => {
+    try {
+      // await mapLoader.loadMapApi();
+      // 地图API加载完成，可以初始化地图
+      initMap();
+    } catch (error) {
+      console.error('地图加载失败:', error);
+    }
   })
   onBeforeUnmount(() => {
     clearOverlays()
